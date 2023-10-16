@@ -12,6 +12,20 @@ const canvasWidth = 500;
 const canvasHeight = 500;
 const canvas = new Canvas(canvasWidth, canvasHeight);
 
-canvas.addButton("clear", () => {
-  canvas.clear();
+canvas.addButton("reset", () => {
+  canvas.reset();
+});
+
+canvas.addButton("undo", () => {
+  if (canvas.hasNoActiveLines()) return;
+  // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+  canvas.setCurLine(canvas.getCurLine() - 1);
+  canvas.draw();
+});
+
+canvas.addButton("redo", () => {
+  if (canvas.isAtMostRecentChange()) return;
+  // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+  canvas.setCurLine(canvas.getCurLine() + 1);
+  canvas.draw();
 });
