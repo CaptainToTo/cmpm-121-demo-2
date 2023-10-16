@@ -57,16 +57,19 @@ export class Canvas {
       this.lines[this.curLine].addPoint(this.cursor.getPos());
     });
     this.canvasElem.addEventListener("mousemove", (e) => {
+      this.cursor.setPos(e.offsetX, e.offsetY);
       if (this.cursor.isActive()) {
-        this.cursor.setPos(e.offsetX, e.offsetY);
         this.lines[this.curLine].addPoint(this.cursor.getPos());
-        this.draw();
       }
+      this.draw();
+      this.cursor.display(this.context!);
     });
     this.canvasElem.addEventListener("mouseup", () => {
       this.cursor.setInactive();
       this.draw();
     });
+
+    this.canvasElem.style.cursor = "none";
 
     this.width = width;
     this.height = height;

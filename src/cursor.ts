@@ -13,6 +13,15 @@ export class Cursor {
     this.color = "black";
   }
 
+  display(context: CanvasRenderingContext2D) {
+    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+    const fontSize = this.width * 5 + 10;
+    context.font = `${fontSize}px monospace`;
+    context.fillStyle = this.color;
+    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+    context.fillText("*", this.x - fontSize * 0.25, this.y + fontSize * 0.5);
+  }
+
   setActive() {
     this.active = true;
   }
