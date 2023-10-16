@@ -54,15 +54,12 @@ export class Canvas {
         );
       }
       this.cursor.setPos(e.offsetX, e.offsetY);
-      this.lines[this.curLine].addPoint({ x: this.cursor.x, y: this.cursor.y });
+      this.lines[this.curLine].addPoint(this.cursor.getPos());
     });
     this.canvasElem.addEventListener("mousemove", (e) => {
       if (this.cursor.isActive()) {
         this.cursor.setPos(e.offsetX, e.offsetY);
-        this.lines[this.curLine].addPoint({
-          x: this.cursor.x,
-          y: this.cursor.y,
-        });
+        this.lines[this.curLine].addPoint(this.cursor.getPos());
         this.draw();
       }
     });
