@@ -1,4 +1,5 @@
 import { Cursor } from "./cursor.ts";
+import { Line } from "./line.ts";
 
 export class Canvas {
   app: HTMLElement;
@@ -9,7 +10,7 @@ export class Canvas {
   cursor: Cursor;
   buttons: Record<string, HTMLButtonElement>;
 
-  lines: { x: number; y: number }[][];
+  lines: Line[];
   curLine: number;
 
   constructor(width: number, height: number) {
@@ -23,7 +24,6 @@ export class Canvas {
     this.context!.fillStyle = "white";
     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
     this.context?.fillRect(0, 0, width, height);
-    this.context!.fillStyle = "black";
 
     this.app.append(this.canvasElem);
     this.canvasElem.style.borderRadius = "5px";
@@ -38,9 +38,14 @@ export class Canvas {
       this.cursor.setActive();
       this.curLine++;
       if (this.curLine >= this.lines.length) {
-        this.lines.push([]);
+        this.lines.push(
+          new Line(this.cursor.getWidth(), this.cursor.getColor()),
+        );
       } else {
-        this.lines[this.curLine] = [];
+        this.lines[this.curLine] = new Line(
+          this.cursor.getWidth(),
+          this.cursor.getColor(),
+        );
         this.lines.splice(
           // eslint-disable-next-line @typescript-eslint/no-magic-numbers
           this.curLine + 1,
@@ -49,12 +54,15 @@ export class Canvas {
         );
       }
       this.cursor.setPos(e.offsetX, e.offsetY);
-      this.lines[this.curLine].push({ x: this.cursor.x, y: this.cursor.y });
+      this.lines[this.curLine].addPoint({ x: this.cursor.x, y: this.cursor.y });
     });
     this.canvasElem.addEventListener("mousemove", (e) => {
       if (this.cursor.isActive()) {
         this.cursor.setPos(e.offsetX, e.offsetY);
-        this.lines[this.curLine].push({ x: this.cursor.x, y: this.cursor.y });
+        this.lines[this.curLine].addPoint({
+          x: this.cursor.x,
+          y: this.cursor.y,
+        });
         this.draw();
       }
     });
@@ -99,15 +107,7 @@ export class Canvas {
     this.clear();
 
     for (let i = 0; i <= this.curLine; i++) {
-      // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-      if (this.lines[i].length < 1) continue;
-      this.context?.beginPath();
-      // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-      this.context?.moveTo(this.lines[i][0].x, this.lines[i][0].y);
-      this.lines[i].forEach((point) => {
-        this.context?.lineTo(point.x, point.y);
-      });
-      this.context?.stroke();
+      this.lines[i].display(this.context!);
     }
   }
 
@@ -117,7 +117,6 @@ export class Canvas {
     this.context!.fillStyle = "white";
     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
     this.context?.fillRect(0, 0, this.width, this.height);
-    this.context!.fillStyle = "black";
   }
 
   reset() {
