@@ -12,8 +12,20 @@ const canvasWidth = 500;
 const canvasHeight = 500;
 const canvas = new Canvas(canvasWidth, canvasHeight);
 
-canvas.addButton("reset", () => {
-  canvas.reset();
+const thinWidth = 1;
+const thickWidth = 3;
+const extraThickWidth = 6;
+
+canvas.addButton("thin", () => {
+  canvas.cursor.setWidth(thinWidth);
+});
+
+canvas.addButton("thick", () => {
+  canvas.cursor.setWidth(thickWidth);
+});
+
+canvas.addButton("extra thick", () => {
+  canvas.cursor.setWidth(extraThickWidth);
 });
 
 canvas.addButton("undo", () => {
@@ -28,4 +40,8 @@ canvas.addButton("redo", () => {
   // eslint-disable-next-line @typescript-eslint/no-magic-numbers
   canvas.setCurLine(canvas.getCurLine() + 1);
   canvas.draw();
+});
+
+canvas.addButton("reset", () => {
+  canvas.reset();
 });
