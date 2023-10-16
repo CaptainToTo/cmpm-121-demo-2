@@ -4,7 +4,7 @@ import { Line } from "./line.ts";
 export class Canvas {
   app: HTMLElement;
   canvasElem: HTMLCanvasElement;
-  context: CanvasRenderingContext2D | null;
+  context: CanvasRenderingContext2D;
   width: number;
   height: number;
   cursor: Cursor;
@@ -19,9 +19,9 @@ export class Canvas {
     this.canvasElem = document.createElement("canvas");
     this.canvasElem.width = width;
     this.canvasElem.height = height;
-    this.context = this.canvasElem.getContext("2d");
+    this.context = this.canvasElem.getContext("2d")!;
 
-    this.context!.fillStyle = "white";
+    this.context.fillStyle = "white";
     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
     this.context?.fillRect(0, 0, width, height);
 
@@ -62,7 +62,7 @@ export class Canvas {
         this.lines[this.curLine].addPoint(this.cursor.getPos());
       }
       this.draw();
-      this.cursor.display(this.context!);
+      this.cursor.display(this.context);
     });
     this.canvasElem.addEventListener("mouseup", () => {
       this.cursor.setInactive();
@@ -107,14 +107,14 @@ export class Canvas {
     this.clear();
 
     for (let i = 0; i <= this.curLine; i++) {
-      this.lines[i].display(this.context!);
+      this.lines[i].display(this.context);
     }
   }
 
   clear() {
     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
     this.context?.clearRect(0, 0, this.width, this.height);
-    this.context!.fillStyle = "white";
+    this.context.fillStyle = "white";
     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
     this.context?.fillRect(0, 0, this.width, this.height);
   }
