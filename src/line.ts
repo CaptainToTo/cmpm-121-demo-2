@@ -16,7 +16,7 @@ export class Line {
   display(context: CanvasRenderingContext2D) {
     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
     if (this.points.length < 1) return;
-    context.fillStyle = this.color;
+    context.strokeStyle = this.color;
     context.lineWidth = this.width;
     context.beginPath();
     // eslint-disable-next-line @typescript-eslint/no-magic-numbers

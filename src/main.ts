@@ -45,3 +45,29 @@ canvas.addButton("redo", () => {
 canvas.addButton("reset", () => {
   canvas.reset();
 });
+
+canvas.addBreak();
+
+canvas.addButton("⬛", () => {
+  canvas.cursor.setColor("black");
+});
+
+canvas.addButton("🟥", () => {
+  canvas.cursor.setColor("red");
+});
+
+canvas.addButton("🟪", () => {
+  canvas.cursor.setColor("purple");
+});
+
+canvas.addButton("🟦", () => {
+  canvas.cursor.setColor("blue");
+});
+
+canvas.addButton("🟨", () => {
+  canvas.cursor.setColor("yellow");
+});
+
+canvas.addButton("🟩", () => {
+  canvas.cursor.setColor("green");
+});

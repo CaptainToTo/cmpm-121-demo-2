@@ -34,36 +34,22 @@ export class Canvas {
 
     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
     this.cursor = new Cursor(0, 0);
+
     this.canvasElem.addEventListener("mousedown", (e) => {
       this.cursor.setActive();
-      this.curLine++;
-      if (this.curLine >= this.lines.length) {
-        this.lines.push(
-          new Line(this.cursor.getWidth(), this.cursor.getColor()),
-        );
-      } else {
-        this.lines[this.curLine] = new Line(
-          this.cursor.getWidth(),
-          this.cursor.getColor(),
-        );
-        this.lines.splice(
-          // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-          this.curLine + 1,
-          // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-          this.lines.length - (this.curLine + 1),
-        );
-      }
+      this.addLine();
       this.cursor.setPos(e.offsetX, e.offsetY);
-      this.lines[this.curLine].addPoint(this.cursor.getPos());
+      this.addPoint(this.cursor.getPos());
     });
+
     this.canvasElem.addEventListener("mousemove", (e) => {
       this.cursor.setPos(e.offsetX, e.offsetY);
       if (this.cursor.isActive()) {
-        this.lines[this.curLine].addPoint(this.cursor.getPos());
+        this.addPoint(this.cursor.getPos());
       }
       this.draw();
-      this.cursor.display(this.context);
     });
+
     this.canvasElem.addEventListener("mouseup", () => {
       this.cursor.setInactive();
       this.draw();
@@ -75,7 +61,29 @@ export class Canvas {
     this.height = height;
     this.buttons = {};
 
-    this.app.append(document.createElement("br"));
+    this.addBreak();
+  }
+
+  addLine() {
+    this.curLine++;
+    if (this.curLine >= this.lines.length) {
+      this.lines.push(new Line(this.cursor.getWidth(), this.cursor.getColor()));
+    } else {
+      this.lines[this.curLine] = new Line(
+        this.cursor.getWidth(),
+        this.cursor.getColor(),
+      );
+      this.lines.splice(
+        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+        this.curLine + 1,
+        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+        this.lines.length - (this.curLine + 1),
+      );
+    }
+  }
+
+  addPoint(point: { x: number; y: number }) {
+    this.lines[this.curLine].addPoint(point);
   }
 
   getCurLine(): number {
@@ -105,7 +113,7 @@ export class Canvas {
 
   draw() {
     this.clear();
-
+    this.cursor.display(this.context);
     for (let i = 0; i <= this.curLine; i++) {
       this.lines[i].display(this.context);
     }
@@ -130,5 +138,9 @@ export class Canvas {
     this.buttons[name].innerHTML = name;
     this.buttons[name].addEventListener("click", pressAction);
     this.app.append(this.buttons[name]);
+  }
+
+  addBreak() {
+    this.app.append(document.createElement("br"));
   }
 }
