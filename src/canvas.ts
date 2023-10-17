@@ -40,6 +40,7 @@ export class Canvas {
       this.addLine();
       this.cursor.setPos(e.offsetX, e.offsetY);
       this.addPoint(this.cursor.getPos());
+      this.publishEvent("drawing-changed");
     });
 
     this.canvasElem.addEventListener("mousemove", (e) => {
@@ -47,11 +48,15 @@ export class Canvas {
       if (this.cursor.isActive()) {
         this.addPoint(this.cursor.getPos());
       }
-      this.draw();
+      this.publishEvent("drawing-changed");
     });
 
     this.canvasElem.addEventListener("mouseup", () => {
       this.cursor.setInactive();
+      this.publishEvent("drawing-changed");
+    });
+
+    this.canvasElem.addEventListener("drawing-changed", () => {
       this.draw();
     });
 
@@ -80,6 +85,10 @@ export class Canvas {
         this.lines.length - (this.curLine + 1),
       );
     }
+  }
+
+  publishEvent(eventName: string) {
+    this.canvasElem.dispatchEvent(new Event(eventName));
   }
 
   addPoint(point: { x: number; y: number }) {
