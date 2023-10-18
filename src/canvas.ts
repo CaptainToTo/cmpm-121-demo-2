@@ -1,4 +1,5 @@
 import { Cursor } from "./cursor.ts";
+import { Action } from "./action.ts";
 import { Line } from "./line.ts";
 
 export class Canvas {
@@ -10,8 +11,9 @@ export class Canvas {
   cursor: Cursor;
   buttons: Record<string, HTMLButtonElement>;
 
+  actions: Action[];
+  curAction: number;
   lines: Line[];
-  curLine: number;
 
   constructor(width: number, height: number) {
     this.app = document.querySelector("#app")!;
@@ -29,8 +31,9 @@ export class Canvas {
     this.canvasElem.style.borderRadius = "5px";
     this.canvasElem.style.border = "3px solid";
 
+    this.actions = [];
     this.lines = [];
-    this.curLine = -1;
+    this.curAction = -1;
 
     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
     this.cursor = new Cursor(0, 0);
@@ -70,19 +73,27 @@ export class Canvas {
   }
 
   addLine() {
-    this.curLine++;
-    if (this.curLine >= this.lines.length) {
-      this.lines.push(new Line(this.cursor.getWidth(), this.cursor.getColor()));
+    this.curAction++;
+    if (this.curAction >= this.actions.length) {
+      const newLine = new Line(
+        this,
+        this.cursor.getWidth(),
+        this.cursor.getColor(),
+      );
+      this.lines.push(newLine);
+      // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+      this.actions.push(newLine);
     } else {
-      this.lines[this.curLine] = new Line(
+      this.lines[this.curAction] = new Line(
+        this,
         this.cursor.getWidth(),
         this.cursor.getColor(),
       );
       this.lines.splice(
         // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-        this.curLine + 1,
+        this.curAction + 1,
         // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-        this.lines.length - (this.curLine + 1),
+        this.lines.length - (this.curAction + 1),
       );
     }
   }
@@ -92,21 +103,21 @@ export class Canvas {
   }
 
   addPoint(point: { x: number; y: number }) {
-    this.lines[this.curLine].addPoint(point);
+    this.lines[this.curAction].addPoint(point);
   }
 
   getCurLine(): number {
-    return this.curLine;
+    return this.curAction;
   }
 
   hasNoActiveLines(): boolean {
     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-    return this.curLine === -1;
+    return this.curAction === -1;
   }
 
   isAtMostRecentChange(): boolean {
     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-    return this.curLine + 1 === this.lines.length;
+    return this.curAction + 1 === this.lines.length;
   }
 
   getLineCount(): number {
@@ -117,13 +128,13 @@ export class Canvas {
     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
     if (i < -1 || i > this.lines.length) return;
 
-    this.curLine = i;
+    this.curAction = i;
   }
 
   draw() {
     this.clear();
     this.cursor.display(this.context);
-    for (let i = 0; i <= this.curLine; i++) {
+    for (let i = 0; i <= this.curAction; i++) {
       this.lines[i].display(this.context);
     }
   }
@@ -139,7 +150,7 @@ export class Canvas {
   reset() {
     this.clear();
     this.lines = [];
-    this.curLine = -1;
+    this.curAction = -1;
   }
 
   addButton(name: string, pressAction: () => void) {

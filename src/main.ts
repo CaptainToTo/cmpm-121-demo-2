@@ -28,6 +28,10 @@ canvas.addButton("extra thick", () => {
   canvas.cursor.setWidth(extraThickWidth);
 });
 
+canvas.addButton("toggle sticker", () => {
+  canvas.cursor.toggleMode();
+});
+
 canvas.addButton("undo", () => {
   if (canvas.hasNoActiveLines()) return;
   // eslint-disable-next-line @typescript-eslint/no-magic-numbers
@@ -70,4 +74,26 @@ canvas.addButton("🟨", () => {
 
 canvas.addButton("🟩", () => {
   canvas.cursor.setColor("green");
+});
+
+canvas.addBreak();
+
+canvas.addButton("😀", () => {
+  canvas.cursor.setSticker("😀");
+});
+
+canvas.addButton("😅", () => {
+  canvas.cursor.setSticker("😅");
+});
+
+canvas.addButton("😭", () => {
+  canvas.cursor.setSticker("😭");
+});
+
+canvas.addButton("😇", () => {
+  canvas.cursor.setSticker("😇");
+});
+
+canvas.addButton("😱", () => {
+  canvas.cursor.setSticker("😱");
 });

@@ -1,9 +1,13 @@
-export class Line {
+import { Action } from "./action.ts";
+import { Canvas } from "./canvas.ts";
+
+export class Line extends Action {
   points: { x: number; y: number }[];
   width: number;
   color: string;
 
-  constructor(width: number, color: string) {
+  constructor(canvas: Canvas, width: number, color: string) {
+    super(canvas);
     this.points = [];
     this.width = width;
     this.color = color;
@@ -13,7 +17,7 @@ export class Line {
     this.points.push(point);
   }
 
-  display(context: CanvasRenderingContext2D) {
+  override display(context: CanvasRenderingContext2D) {
     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
     if (this.points.length < 1) return;
     context.strokeStyle = this.color;
