@@ -113,6 +113,16 @@ canvas.addButton("😱", () => {
   }
 });
 
+canvas.addButton("Custom Sticker", () => {
+  const newStickerText: string = prompt("Custom Sticker:", "OMG!")!;
+  canvas.insertButton(newStickerText, "Custom Sticker", () => {
+    canvas.cursor.setSticker(newStickerText);
+    if (canvas.cursor.isDrawMode()) {
+      canvas.cursor.toggleMode();
+    }
+  });
+});
+
 canvas.addBreak();
 
 canvas.addButton("undo", () => {

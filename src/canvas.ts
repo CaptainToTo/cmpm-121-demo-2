@@ -172,11 +172,20 @@ export class Canvas {
     this.curAction = -1;
   }
 
-  addButton(name: string, pressAction: () => void) {
+  createButton(name: string, pressAction: () => void) {
     this.buttons[name] = document.createElement("button");
     this.buttons[name].innerHTML = name;
     this.buttons[name].addEventListener("click", pressAction);
+  }
+
+  addButton(name: string, pressAction: () => void) {
+    this.createButton(name, pressAction);
     this.app.append(this.buttons[name]);
+  }
+
+  insertButton(name: string, insertAt: string, pressAction: () => void) {
+    this.createButton(name, pressAction);
+    this.app.insertBefore(this.buttons[name], this.buttons[insertAt]);
   }
 
   addBreak() {

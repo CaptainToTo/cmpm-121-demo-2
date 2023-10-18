@@ -25,6 +25,7 @@ export class Sticker extends Action {
     const sizeScale = 5;
     const fontSize = this.size * sizeScale + minStickerSize;
     context.font = `${fontSize}px monospace`;
+    context.fillStyle = "black";
     const fontXOffset = 0.25;
     const fontYOffset = 0.5;
     context.fillText(
