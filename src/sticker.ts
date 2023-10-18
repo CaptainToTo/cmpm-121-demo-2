@@ -25,11 +25,12 @@ export class Sticker extends Action {
     const sizeScale = 5;
     const fontSize = this.size * sizeScale + minStickerSize;
     context.font = `${fontSize}px monospace`;
-    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+    const fontXOffset = 0.25;
+    const fontYOffset = 0.5;
     context.fillText(
       this.value,
-      this.x - fontSize * 0.25,
-      this.y + fontSize * 0.5,
+      this.x - fontSize * fontXOffset,
+      this.y + fontSize * fontYOffset,
     );
   }
 }

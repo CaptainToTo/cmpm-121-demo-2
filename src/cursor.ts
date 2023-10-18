@@ -22,7 +22,6 @@ export class Cursor {
       this.mode = "sticker";
     } else {
       this.mode = "draw";
-      this.setSticker("*");
     }
   }
 
@@ -38,17 +37,22 @@ export class Cursor {
     this.sticker = sticker;
   }
 
+  getSticker(): string {
+    return this.sticker;
+  }
+
   display(context: CanvasRenderingContext2D) {
     const minStickerSize = 20;
     const sizeScale = 5;
     const fontSize = this.width * sizeScale + minStickerSize;
     context.font = `${fontSize}px monospace`;
     context.fillStyle = this.color;
-    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+    const fontXOffset = 0.25;
+    const fontYOffset = 0.5;
     context.fillText(
       this.isStickerMode() ? this.sticker : "*",
-      this.x - fontSize * 0.25,
-      this.y + fontSize * 0.5,
+      this.x - fontSize * fontXOffset,
+      this.y + fontSize * fontYOffset,
     );
   }
 

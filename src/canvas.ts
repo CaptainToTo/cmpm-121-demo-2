@@ -1,6 +1,7 @@
 import { Cursor } from "./cursor.ts";
 import { Action } from "./action.ts";
 import { Line } from "./line.ts";
+import { Sticker } from "./sticker.ts";
 
 export class Canvas {
   app: HTMLElement;
@@ -40,9 +41,8 @@ export class Canvas {
 
     this.canvasElem.addEventListener("mousedown", (e) => {
       this.cursor.setActive();
-      this.addLine();
       this.cursor.setPos(e.offsetX, e.offsetY);
-      this.addPoint(this.cursor.getPos());
+      this.addNewAction();
       this.publishEvent("drawing-changed");
     });
 
@@ -72,30 +72,48 @@ export class Canvas {
     this.addBreak();
   }
 
+  addNewAction() {
+    if (this.cursor.isDrawMode()) {
+      this.addLine();
+    } else {
+      this.addSticker();
+    }
+  }
+
+  addSticker() {
+    this.curAction++;
+
+    const newSticker = new Sticker(
+      this,
+      this.cursor.getSticker(),
+      this.cursor.getWidth(),
+    );
+    newSticker.setPos(this.cursor.getPos());
+
+    if (this.curAction < this.actions.length) {
+      this.actions.splice(this.curAction, this.actions.length - this.curAction);
+    }
+
+    this.actions.push(newSticker);
+
+    this.cursor.setInactive();
+  }
+
   addLine() {
     this.curAction++;
-    if (this.curAction >= this.actions.length) {
-      const newLine = new Line(
-        this,
-        this.cursor.getWidth(),
-        this.cursor.getColor(),
-      );
-      this.lines.push(newLine);
-      // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-      this.actions.push(newLine);
-    } else {
-      this.lines[this.curAction] = new Line(
-        this,
-        this.cursor.getWidth(),
-        this.cursor.getColor(),
-      );
-      this.lines.splice(
-        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-        this.curAction + 1,
-        // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-        this.lines.length - (this.curAction + 1),
-      );
+
+    const newLine = new Line(
+      this,
+      this.cursor.getWidth(),
+      this.cursor.getColor(),
+    );
+
+    if (this.curAction < this.actions.length) {
+      this.actions.splice(this.curAction, this.actions.length - this.curAction);
     }
+
+    this.actions.push(newLine);
+    this.addPoint(this.cursor.getPos());
   }
 
   publishEvent(eventName: string) {
@@ -103,40 +121,41 @@ export class Canvas {
   }
 
   addPoint(point: { x: number; y: number }) {
-    this.lines[this.curAction].addPoint(point);
+    const curLine: Line = this.actions[this.curAction] as Line;
+    curLine.addPoint(point);
   }
 
-  getCurLine(): number {
+  getCurAction(): number {
     return this.curAction;
   }
 
-  hasNoActiveLines(): boolean {
+  hasNoActiveActions(): boolean {
     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
     return this.curAction === -1;
   }
 
   isAtMostRecentChange(): boolean {
     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-    return this.curAction + 1 === this.lines.length;
+    return this.curAction + 1 === this.actions.length;
   }
 
-  getLineCount(): number {
-    return this.lines.length;
+  getActionCount(): number {
+    return this.actions.length;
   }
 
   setCurLine(i: number) {
     // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-    if (i < -1 || i > this.lines.length) return;
+    if (i < -1 || i > this.actions.length) return;
 
     this.curAction = i;
   }
 
   draw() {
     this.clear();
-    this.cursor.display(this.context);
     for (let i = 0; i <= this.curAction; i++) {
-      this.lines[i].display(this.context);
+      this.actions[i].display(this.context);
     }
+    this.cursor.display(this.context);
   }
 
   clear() {

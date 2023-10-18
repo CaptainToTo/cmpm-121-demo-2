@@ -32,68 +32,103 @@ canvas.addButton("toggle sticker", () => {
   canvas.cursor.toggleMode();
 });
 
-canvas.addButton("undo", () => {
-  if (canvas.hasNoActiveLines()) return;
-  // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-  canvas.setCurLine(canvas.getCurLine() - 1);
-  canvas.draw();
-});
-
-canvas.addButton("redo", () => {
-  if (canvas.isAtMostRecentChange()) return;
-  // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-  canvas.setCurLine(canvas.getCurLine() + 1);
-  canvas.draw();
-});
-
-canvas.addButton("reset", () => {
-  canvas.reset();
-});
-
 canvas.addBreak();
 
 canvas.addButton("⬛", () => {
   canvas.cursor.setColor("black");
+  if (canvas.cursor.isStickerMode()) {
+    canvas.cursor.toggleMode();
+  }
 });
 
 canvas.addButton("🟥", () => {
   canvas.cursor.setColor("red");
+  if (canvas.cursor.isStickerMode()) {
+    canvas.cursor.toggleMode();
+  }
 });
 
 canvas.addButton("🟪", () => {
   canvas.cursor.setColor("purple");
+  if (canvas.cursor.isStickerMode()) {
+    canvas.cursor.toggleMode();
+  }
 });
 
 canvas.addButton("🟦", () => {
   canvas.cursor.setColor("blue");
+  if (canvas.cursor.isStickerMode()) {
+    canvas.cursor.toggleMode();
+  }
 });
 
 canvas.addButton("🟨", () => {
   canvas.cursor.setColor("yellow");
+  if (canvas.cursor.isStickerMode()) {
+    canvas.cursor.toggleMode();
+  }
 });
 
 canvas.addButton("🟩", () => {
   canvas.cursor.setColor("green");
+  if (canvas.cursor.isStickerMode()) {
+    canvas.cursor.toggleMode();
+  }
 });
 
 canvas.addBreak();
 
 canvas.addButton("😀", () => {
   canvas.cursor.setSticker("😀");
+  if (canvas.cursor.isDrawMode()) {
+    canvas.cursor.toggleMode();
+  }
 });
 
 canvas.addButton("😅", () => {
   canvas.cursor.setSticker("😅");
+  if (canvas.cursor.isDrawMode()) {
+    canvas.cursor.toggleMode();
+  }
 });
 
 canvas.addButton("😭", () => {
   canvas.cursor.setSticker("😭");
+  if (canvas.cursor.isDrawMode()) {
+    canvas.cursor.toggleMode();
+  }
 });
 
 canvas.addButton("😇", () => {
   canvas.cursor.setSticker("😇");
+  if (canvas.cursor.isDrawMode()) {
+    canvas.cursor.toggleMode();
+  }
 });
 
 canvas.addButton("😱", () => {
   canvas.cursor.setSticker("😱");
+  if (canvas.cursor.isDrawMode()) {
+    canvas.cursor.toggleMode();
+  }
+});
+
+canvas.addBreak();
+
+canvas.addButton("undo", () => {
+  if (canvas.hasNoActiveActions()) return;
+  // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+  canvas.setCurLine(canvas.getCurAction() - 1);
+  canvas.draw();
+});
+
+canvas.addButton("redo", () => {
+  if (canvas.isAtMostRecentChange()) return;
+  // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+  canvas.setCurLine(canvas.getCurAction() + 1);
+  canvas.draw();
+});
+
+canvas.addButton("reset", () => {
+  canvas.reset();
 });
