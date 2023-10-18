@@ -142,3 +142,9 @@ canvas.addButton("redo", () => {
 canvas.addButton("reset", () => {
   canvas.reset();
 });
+
+const downloadScaleX = 4;
+const downloadScaleY = 4;
+canvas.addButton("download", () => {
+  canvas.download(downloadScaleX, downloadScaleY);
+});

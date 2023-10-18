@@ -191,4 +191,26 @@ export class Canvas {
   addBreak() {
     this.app.append(document.createElement("br"));
   }
+
+  drawForDownload() {
+    this.clear();
+    for (let i = 0; i <= this.curAction; i++) {
+      this.actions[i].display(this.context);
+    }
+  }
+
+  download(scaleX: number, scaleY: number) {
+    this.drawForDownload();
+    const tempCanvas: HTMLCanvasElement = document.createElement("canvas");
+    tempCanvas.width = this.width * scaleX;
+    tempCanvas.height = this.height * scaleY;
+    const tempContext: CanvasRenderingContext2D = tempCanvas.getContext("2d")!;
+    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+    tempContext.drawImage(this.canvasElem, 0, 0);
+    tempContext.scale(scaleX, scaleY);
+    const anchor = document.createElement("a");
+    anchor.href = tempCanvas.toDataURL("image/png");
+    anchor.download = "sketchpad.png";
+    anchor.click();
+  }
 }
